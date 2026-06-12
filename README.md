@@ -183,10 +183,4 @@ x86 Architecture | C + ASM Core
 
 ---
 
-## 📜 License
-
-MIT License — free to use, study, and build upon.
-
----
-
 <p align="center">Made with 🖤 by <a href="https://github.com/compiledbyutkarsh">compiled by utkarsh</a></p>
