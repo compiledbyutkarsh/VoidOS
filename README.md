@@ -21,19 +21,21 @@ This is what systems programming looks like at its lowest level.
 
 VoidOS follows a **microkernel design** — only the absolute minimum runs in kernel space. Everything else communicates through a clean message-passing IPC interface.
 
-┌─────────────────────────────┐
-│        User Processes        │
-├─────────────────────────────┤
-│       IPC Message Ports      │
-├─────────────────────────────┤
-│     Priority Scheduler       │
-├──────────────┬──────────────┤
-│     VMM      │     PMM      │
-├─────────────────────────────┤
-│        Microkernel           │
-├─────────────────────────────┤
-│      Hardware  (x86)         │
-└─────────────────────────────┘
+```
++-----------------------------+
+|        User Processes       |
++-----------------------------+
+|      IPC Message Ports      |
++-----------------------------+
+|      Priority Scheduler     |
++-------------+---------------+
+|     VMM     |      PMM      |
++-----------------------------+
+|         Microkernel         |
++-----------------------------+
+|       Hardware  (x86)       |
++-----------------------------+
+```
 
 ---
 
@@ -41,7 +43,7 @@ VoidOS follows a **microkernel design** — only the absolute minimum runs in ke
 
 ### 🔧 Bootloader
 - Two-stage bootloader written in pure x86 Assembly
-- Switches CPU from 16-bit Real Mode → 32-bit Protected Mode
+- Switches CPU from 16-bit Real Mode to 32-bit Protected Mode
 - Sets up GDT (Global Descriptor Table) before jumping to kernel
 
 ### 🧩 Microkernel
@@ -69,7 +71,7 @@ VoidOS follows a **microkernel design** — only the absolute minimum runs in ke
 
 ### ⚡ Scheduler
 - Priority-based preemptive scheduling
-- 5 priority levels: IDLE → LOW → NORMAL → HIGH → REALTIME
+- 5 priority levels: IDLE -> LOW -> NORMAL -> HIGH -> REALTIME
 - Task states: RUNNING, READY, BLOCKED, SLEEPING, ZOMBIE
 - Per-task IPC port auto-assigned on creation
 
@@ -84,29 +86,31 @@ VoidOS follows a **microkernel design** — only the absolute minimum runs in ke
 
 ## 📁 Project Structure
 
+```
 VoidOS/
 ├── boot/
-│   ├── bootloader.asm      # Stage 1 bootloader
-│   ├── print.asm           # Real mode print utilities
-│   ├── disk.asm            # BIOS disk read routines
-│   ├── gdt.asm             # Global Descriptor Table
-│   └── pm_switch.asm       # Protected mode switch
+│   ├── bootloader.asm
+│   ├── print.asm
+│   ├── disk.asm
+│   ├── gdt.asm
+│   └── pm_switch.asm
 ├── kernel/
-│   ├── kernel_entry.asm    # Kernel entry point (ASM)
-│   ├── multiboot.asm       # Multiboot header
-│   ├── kernel.c            # Kernel main
-│   ├── pmm.c / pmm.h       # Physical memory manager
-│   ├── vmm.c / vmm.h       # Virtual memory manager
-│   ├── ipc.c / ipc.h       # IPC subsystem
-│   └── scheduler.c / .h    # Task scheduler
+│   ├── kernel_entry.asm
+│   ├── multiboot.asm
+│   ├── kernel.c
+│   ├── pmm.c / pmm.h
+│   ├── vmm.c / vmm.h
+│   ├── ipc.c / ipc.h
+│   └── scheduler.c / scheduler.h
 ├── drivers/
-│   └── vga.c / vga.h       # VGA text mode driver
+│   └── vga.c / vga.h
 ├── lib/
-│   └── types.h             # Base type definitions
+│   └── types.h
 ├── scripts/
-│   ├── linker.ld           # Linker script
-│   └── grub.cfg            # GRUB boot config
+│   ├── linker.ld
+│   └── grub.cfg
 └── Makefile
+```
 
 ---
 
@@ -114,11 +118,11 @@ VoidOS/
 
 | Tool | Purpose |
 |------|---------|
-| `i686-elf-gcc` | Cross compiler for x86 freestanding |
-| `nasm` | x86 assembler |
-| `qemu-system-i386` | x86 emulator for testing |
-| `grub-mkrescue` | Bootable ISO generation |
-| `xorriso` | ISO creation utility |
+| i686-elf-gcc | Cross compiler for x86 freestanding |
+| nasm | x86 assembler |
+| qemu-system-i386 | x86 emulator for testing |
+| grub-mkrescue | Bootable ISO generation |
+| xorriso | ISO creation utility |
 
 ### Install on macOS
 
@@ -128,25 +132,19 @@ brew install i686-elf-gcc nasm qemu xorriso grub
 
 ---
 
-## 🔨 Building & Running
+## 🔨 Building and Running
 
 ```bash
-# Build the kernel
 make all
 
-# Run in QEMU
 make run
 
-# Build bootable ISO
 make iso
 
-# Run ISO in QEMU
 make run-iso
 
-# Debug with GDB
 make debug
 
-# Clean build artifacts
 make clean
 ```
 
@@ -154,9 +152,11 @@ make clean
 
 ## 📸 Boot Output
 
+```
 =================================================
-VoidOS Microkernel v0.1.0
-x86 Architecture | C + ASM Core
+          VoidOS Microkernel v0.1.0
+       x86 Architecture | C + ASM Core
+=================================================
 [BOOT]  VoidOS kernel loaded
 [MEM]   Initializing physical memory manager...
 [PMM]   Total: 16384 KB | Free: 15360 KB | Used: 1024 KB
@@ -169,6 +169,7 @@ x86 Architecture | C + ASM Core
 [SCHED] Initialized | Max tasks: 64 | Quantum: 10
 [BOOT]  All subsystems nominal
 [BOOT]  VoidOS is alive.
+```
 
 ---
 
@@ -180,6 +181,12 @@ x86 Architecture | C + ASM Core
 - [ ] System call interface
 - [ ] Shell (VoidShell)
 - [ ] ELF binary loader
+
+---
+
+## 📜 License
+
+MIT License — free to use, study, and build upon.
 
 ---
 
